@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <Product>SearchRanking</Product>
+    
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>13.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <RootNamespace>SearchRanking.CommandLine</RootNamespace>
+
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SearchRanking.CsvRepository\SearchRanking.CsvRepository.csproj" />
+    <ProjectReference Include="..\SearchRanking.Models.Mapper\SearchRanking.Models.Mapper.csproj" />
+    <ProjectReference Include="..\SearchRanking.Models\SearchRanking.Models.csproj" />
+    <ProjectReference Include="..\SearchRanking.ScoreService\SearchRanking.ScoreService.csproj" />
+  </ItemGroup>
+  
+</Project>
