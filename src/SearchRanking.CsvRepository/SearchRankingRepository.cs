@@ -3,6 +3,7 @@ using CsvHelper;
 using Microsoft.Extensions.Options;
 using SearchRanking.CsvModels;
 using SearchRanking.CsvRepository.Converters;
+using SearchRanking.CsvRepository.Validators;
 
 namespace SearchRanking.CsvRepository;
 
@@ -10,11 +11,13 @@ public sealed class SearchRankingRepository(
     IOptions<CsvSettings> csvOptions,
     ILogger<SearchRankingRepository> logger) : ISearchRankingRepository
 {
+    private IValidator reviewFileValidator = new ReviewFileValidator();
+    private IValidator scoreFileValidator = new ScoreFileValidator();
+    
     public async Task<IReadOnlyList<ReviewCsv>> ReadAsync(CancellationToken cancellationToken)
     {
-        if (File.Exists(csvOptions.Value.Reviews) == false)
+        if (reviewFileValidator.IsValid(csvOptions.Value.Reviews, logger) == false)
         {
-            logger.LogError("CSV file doesn't exist: {Path}", csvOptions.Value.Reviews);
             return [];
         }
 
@@ -34,9 +37,8 @@ public sealed class SearchRankingRepository(
 
     public async Task WriteAsync(IReadOnlyList<ScoreCsv> scores, CancellationToken cancellationToken)
     {
-        if (File.Exists(csvOptions.Value.Scores))
+        if (scoreFileValidator.IsValid(csvOptions.Value.Scores, logger) == false)
         {
-            logger.LogError("CSV is already exists: {Path}", csvOptions.Value.Scores);
             return;
         }
 
