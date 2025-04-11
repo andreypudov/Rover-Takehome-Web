@@ -37,6 +37,7 @@ public sealed class SearchRankingRepository(
         if (File.Exists(csvOptions.Value.Scores))
         {
             logger.LogError("CSV is already exists: {Path}", csvOptions.Value.Scores);
+            return;
         }
 
         await using var writer = new StreamWriter(csvOptions.Value.Scores);
