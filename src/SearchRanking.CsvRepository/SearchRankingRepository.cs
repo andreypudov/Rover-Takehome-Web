@@ -11,8 +11,8 @@ public sealed class SearchRankingRepository(
     IOptions<CsvSettings> csvOptions,
     ILogger<SearchRankingRepository> logger) : ISearchRankingRepository
 {
-    private IValidator reviewFileValidator = new ReviewFileValidator();
-    private IValidator scoreFileValidator = new ScoreFileValidator();
+    private readonly IValidator reviewFileValidator = new ReviewFileValidator();
+    private readonly IValidator scoreFileValidator = new ScoreFileValidator();
     
     public async Task<IReadOnlyList<ReviewCsv>> ReadAsync(CancellationToken cancellationToken)
     {
