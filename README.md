@@ -68,3 +68,21 @@ A copy of the output scores CSV is also generated at `../../data/sitters.csv`.
 In a production application, the calculation of search scores should be structured to minimize redundant processing and ensure scalability. Instead of computing scores directly from raw review data on demand, the system should preprocess and cache these values in a fast-access store such as Redis or a dedicated database table. The `Compute` method should be modified to support incremental updates, where only new or modified reviews trigger a recalculation rather than recomputing scores for all sitters. Additionally, the profile and ratings scores should be stored separately and combined during retrieval to allow for efficient updates without recalculating all components.
 
 For storage optimization, the dictionary-based in-memory approach currently used in `SearchScoreProvider` should be replaced with a persistent store to prevent recalculations on every service restart. The `Compute` method should fetch precomputed ratings scores from storage rather than computing them each time. Instead of aggregating all reviews in memory using `GroupBy`, the system should query only the necessary data using indexed searches, reducing memory overhead and improving response time. The profile score computation, which currently relies on `First()`, should ensure that the review selection is deterministic, such as always picking the most recent review, to prevent inconsistencies when new data arrives.
+
+## Second Interview Question
+
+### Implement a change to the Ratings Score in your app
+
+The data in `reviews.csv` contains a column, `response_time_minutes`, to indicate how long it took a sitter to respond to the owner’s initial request. Our research indicates that a faster response time leads to a better experience for owners on our platform, so we would like to boost the Ratings Score for sitters who respond quickly.
+
+When processing the **rating for a given row** in `reviews.csv`, increase the rating by 1 if the `response_time_minutes` for that row is below the **median** `response_time_minutes` of the entire data set. If the rating for a given row is 5, there should be no change to the rating value you use for that row.
+
+For example, suppose the **median** `response_time_minutes` for the entire set is 10, here’s a table indicating a subset of expected behaviors:
+
+| Original rating | response_time_minutes | Rating to be used |
+|-----------------|------------------------|-------------------|
+| 4               | 9                      | 5                 |
+| 4               | 10                     | 4                 |
+| 4               | 11                     | 4                 |
+
+You may use built-in methods for calculating the median `response_time_in_minutes`, the goal is to write code that would be ready for production.
